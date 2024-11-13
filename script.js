@@ -1,3 +1,4 @@
+
 const gridContainer = document.getElementById('grid-container');
 const statusText = document.getElementById('status');
 const shuffleButton = document.getElementById('shuffle-button');
@@ -9,8 +10,9 @@ let letters = [];
 let solution = [];
 let timer;
 let elapsedTime = 0;
+let draggedElement = null;
+let touchStartIndex = null;
 
-// Corrected puzzles based on user images
 const puzzles = {
     easy: { letters: ['A', 'A', 'A', 'A', 'A', 'E', 'E', 'T', 'T', 'R', 'R', 'R', 'R', 'R', 'P', 'T'], solution: ['PART', 'AREA', 'REAR', 'TART'] },
     medium: { letters: ['O', 'O', 'O', 'E', 'E', 'I', 'S', 'S', 'S', 'T', 'T', 'N', 'N', 'M', 'L', 'R'], solution: ['LOST', 'OMEN', 'SERI', 'SNOT'] },
@@ -18,7 +20,6 @@ const puzzles = {
     expert: { letters: ['A', 'E', 'E', 'E', 'E', 'O', 'O', 'I', 'R', 'R', 'N', 'D', 'P', 'N', 'L', 'M'], solution: ['NEPO', 'EROM', 'NARI', 'EDEL'] }
 };
 
-// Initialize the game based on selected difficulty
 function initializeGame() {
     const params = new URLSearchParams(window.location.search);
     const difficulty = params.get('difficulty') || 'easy';
@@ -29,7 +30,6 @@ function initializeGame() {
     startTimer();
 }
 
-// Initialize the grid
 function initializeGrid() {
     gridContainer.innerHTML = '';
     letters.forEach((letter, index) => {
@@ -43,16 +43,19 @@ function initializeGrid() {
         tile.addEventListener('dragstart', handleDragStart);
         tile.addEventListener('dragover', handleDragOver);
         tile.addEventListener('drop', handleDrop);
+
+        // Touch support for mobile devices
+        tile.addEventListener('touchstart', handleTouchStart);
+        tile.addEventListener('touchmove', handleTouchMove);
+        tile.addEventListener('touchend', handleTouchEnd);
     });
 }
 
-// Shuffle letters
 function shuffleLetters() {
     letters = letters.sort(() => Math.random() - 0.5);
     initializeGrid();
 }
 
-// Timer functionality
 function startTimer() {
     elapsedTime = 0;
     clearInterval(timer);
@@ -61,9 +64,6 @@ function startTimer() {
         timerText.textContent = 'Time: ' + elapsedTime + 's';
     }, 1000);
 }
-
-// Drag-and-drop handlers
-let draggedElement = null;
 
 function handleDragStart(event) {
     draggedElement = event.target;
@@ -83,7 +83,28 @@ function handleDrop(event) {
     checkWinCondition();
 }
 
-// Check win condition
+function handleTouchStart(event) {
+    const target = event.target;
+    touchStartIndex = target.getAttribute('data-index');
+}
+
+function handleTouchMove(event) {
+    event.preventDefault();
+}
+
+function handleTouchEnd(event) {
+    const target = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+    if (!target || !target.classList.contains('tile')) return;
+
+    const targetIndex = target.getAttribute('data-index');
+    if (touchStartIndex !== null && targetIndex !== null) {
+        [letters[touchStartIndex], letters[targetIndex]] = [letters[targetIndex], letters[touchStartIndex]];
+        initializeGrid();
+        checkWinCondition();
+        touchStartIndex = null;
+    }
+}
+
 function checkWinCondition() {
     const rows = [];
     for (let i = 0; i < 4; i++) {
@@ -95,52 +116,15 @@ function checkWinCondition() {
     }
 }
 
-// Reveal the solution
 revealButton.addEventListener('click', () => {
     clearInterval(timer);
     letters = solution.flat();
     initializeGrid();
 });
 
-// Home button functionality
 homeButton.addEventListener('click', () => {
     window.location.href = 'index.html';
 });
 
-// Initialize game
 initializeGame();
 shuffleButton.addEventListener('click', shuffleLetters);
-
-// JavaScript for "How to Play" button functionality
-document.getElementById('how-to-play-button').addEventListener('click', () => {
-    document.getElementById('how-to-play').style.display = 'block';
-    document.getElementById('home-content').style.display = 'none';
-});
-
-document.getElementById('return-home').addEventListener('click', () => {
-    document.getElementById('how-to-play').style.display = 'none';
-    document.getElementById('home-content').style.display = 'block';
-});
-
-// JavaScript for "How does this work?" button functionality
-document.getElementById('how-it-works-button').addEventListener('click', () => {
-    window.location.href = 'how_it_works.html';
-});
-
-// JavaScript for "How does this work?" button functionality
-document.getElementById('how-it-works-button').addEventListener('click', () => {
-    window.location.href = 'how_it_works.html';
-});
-
-// JavaScript for "How does this work?" button functionality
-document.getElementById('how-it-works-button').addEventListener('click', () => {
-    window.location.href = 'how_it_works.html';
-});
-
-// Adding touch event listeners for mobile devices
-gridContainer.addEventListener('touchstart', (event) => {
-    const target = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY);
-    if (target && target.classList.contains('grid-item')) {
-        handleClick(target);
-    }
-});

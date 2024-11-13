@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>a game by Harry</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div style="text-align: center; margin-top: 10px;">
+    <img src="logo.png" alt="GRIDLOCK Logo" style="max-width: 200px;">
+    <h1 style="font-family: Arial, sans-serif; font-size: 28px; color: #333;">a game by Harry</h1>
+</div>
+
+    <h1></h1>
+    <h2>Select Difficulty</h2>
+    <button onclick="startGame('easy')">Easy</button>
+    <button onclick="startGame('medium')">Medium</button>
+    <button onclick="startGame('hard')">Hard</button>
+    <button onclick="startGame('expert')">Expert</button>
+    <script>
+        function startGame(difficulty) {
+            window.location.href = 'game.html?difficulty=' + difficulty;
+        }
+    </script>
+
+<div id="how-to-play" style="display: none; text-align: center; padding: 20px;">
+    <h2>How to Play</h2>
+    <p>In GRIDLOCK, your goal is to fill the grid using the provided letters to form words that match the solution clues. Click on each cell to enter a letter. When all words are correct, the grid will turn green, indicating you’ve solved the puzzle!</p>
+    <button id="return-home" style="padding: 10px 20px; font-size: 16px;">Return to Home</button>
+</div>
+
+</body>
+</html>
+
+<div class="how-it-works">
+    <button onclick="window.location.href='how_it_works.html'">How does this game work?</button>
+</div>

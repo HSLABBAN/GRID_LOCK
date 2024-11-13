@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works - GRIDLOCK</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div style="text-align: center; padding: 20px;">
+        <h2>How does this work?</h2>
+        <p>GRIDLOCK is solved when all 4 rows and all 4 columns contain a valid 4-letter word.</p>
+        <ol style="text-align: left; max-width: 600px; margin: auto;">
+            <li>You start with a 4x4 grid filled with 16 letters.</li>
+            <li>The letters are already provided, but they are scrambled.</li>
+            <li>Rearrange the letters so that all rows and all columns form valid 4-letter words.</li>
+            <li>Each row must form a valid 4-letter word, from left-to-right OR right-to-left (frontwards or backwards).</li>
+            <li>Each column must form a valid 4-letter word, from top-to-bottom OR bottom-to-top (frontwards or backwards).</li>
+        </ol>
+        <button id="return-home" style="padding: 10px 20px; font-size: 16px;">Return to Home</button>
+    </div>
+    <script>
+        document.getElementById('return-home').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
